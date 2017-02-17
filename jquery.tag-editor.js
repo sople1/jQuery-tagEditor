@@ -267,7 +267,12 @@
                 // left/up key + backspace key on empty field
                 if ((e.which == 37 || !o.autocomplete && e.which == 38) && !$t.caret() || e.which == 8 && !$t.val()) {
                     var prev_tag = $t.closest('li').prev('li').find('.tag-editor-tag');
-                    if (prev_tag.length) prev_tag.click().find('input').caret(-1);
+                    if (prev_tag.length) {
+                        if (o.autoremove && e.which == 8) 
+                            prev_tag.closest('li').find('.tag-editor-delete').click();
+                        else
+                            prev_tag.click().find('input').caret(-1);
+                    }
                     else if ($t.val() && !(o.maxTags && ed.data('tags').length >= o.maxTags)) $(new_tag).insertBefore($t.closest('li')).find('.tag-editor-tag').click();
                     return false;
                 }
@@ -304,7 +309,12 @@
                 // del key
                 else if (e.which == 46 && (!$.trim($t.val()) || ($t.caret() == $t.val().length))) {
                     var next_tag = $t.closest('li').next('li').find('.tag-editor-tag');
-                    if (next_tag.length) next_tag.click().find('input').caret(0);
+                    if (next_tag.length) {
+                        if (o.autoremove && e.which == 46) 
+                            next_tag.closest('li').find('.tag-editor-delete').click();
+                        else
+                            next_tag.click().find('input').caret(0);
+                    }
                     else if ($t.val()) ed.click();
                     return false;
                 }
@@ -361,6 +371,7 @@
         animateDelete: 175,
         sortable: true, // jQuery UI sortable
         autocomplete: null, // options dict for jQuery UI autocomplete
+        autoremove: false,
 
         // callbacks
         onChange: function(){},
